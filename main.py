@@ -1,24 +1,25 @@
+import datetime as dt
+from random import choice
 import smtplib
 
-my_email = ""
-my_password = ""
-server = "smtp.gmail.com"
+FROM_EMAIL = ""
+PASSWORD = ""
+SMTP_SERVER = "smtp.gmail.com"
+TO_EMAILS = ""
 
-# connection = smtplib.SMTP(server)
-# connection.starttls()
-# connection.login(user=my_email, password=my_password)
-# connection.sendmail(
-#     from_addr=my_email,
-#     to_addrs="miguel.lopez@woodward.mx",
-#     msg="Subject:Hello\n\nBody of the email :D"
-# )
-# connection.close()
+now = dt.datetime.now()
+weekday = now.weekday()
 
-with smtplib.SMTP(server) as connection:
-    connection.starttls()
-    connection.login(user=my_email, password=my_password)
-    connection.sendmail(
-        from_addr=my_email,
-        to_addrs="miguel.lopez@woodward.mx",
-        msg="Subject:Hello\n\nBody of the email :D"
-    )
+if weekday == 3:
+    with open("./data/quotes.txt") as file:
+        quotes = file.readlines()
+        random_quote = choice(quotes)
+    
+    with smtplib.SMTP(SMTP_SERVER) as connection:
+        connection.starttls()
+        connection.login(user=FROM_EMAIL, password=PASSWORD)
+        connection.sendmail(
+            from_addr=FROM_EMAIL,
+            to_addrs=TO_EMAILS,
+            msg=f"Subject:Be positive!\n\n{random_quote}"
+        )
